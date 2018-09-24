@@ -9,5 +9,5 @@ def excel_cols():
     """
     n=1
     while True:
-        yield from (''.join(group) for group in itertools.product(str.ascii_uppercase, repeat=n))
+        yield from (''.join(group) for group in itertools.product(string.ascii_uppercase, repeat=n))
         n += 1

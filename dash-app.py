@@ -26,11 +26,15 @@ DF_SIMPLE = pd.DataFrame({
     'z': ['a', 'b', 'c', 'a', 'b', 'c']
 })
 
-n_rows = 1000
+n_rows = 1000000
+list_excel_cols = list(itertools.islice(excel_cols(), n_rows))
+list_excel_cols_shuffled = list(itertools.islice(excel_cols(), n_rows))
+shuffle(list_excel_cols_shuffled)
 df_rows = pd.DataFrame({
-    'x': list(itertools.islice(excel_cols(), n_rows)),
+    'index': np.arange(n_rows),
+    'x': list_excel_cols,
     'y':np.random.randint(0,n_rows*10, n_rows),
-    'z': shuffle(list(itertools.islice(excel_cols(), n_rows)))
+    'z': list_excel_cols_shuffled
 })
 
 app.layout = html.Div([
