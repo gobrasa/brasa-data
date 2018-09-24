@@ -20,12 +20,6 @@ server.secret_key = os.environ.get('secret_key', str(np.random.randint(0, 100000
 app = dash.Dash(__name__, server=server)
 ####
 
-DF_SIMPLE = pd.DataFrame({
-    'x': ['A', 'B', 'C', 'D', 'E', 'F'],
-    'y': [4, 3, 1, 2, 3, 6],
-    'z': ['a', 'b', 'c', 'a', 'b', 'c']
-})
-
 n_rows = 10000
 list_excel_cols = list(itertools.islice(excel_cols(), n_rows))
 list_excel_cols_shuffled = list(itertools.islice(excel_cols(), n_rows))
@@ -33,26 +27,20 @@ shuffle(list_excel_cols_shuffled)
 df_rows = pd.DataFrame({
     'index': np.arange(n_rows),
     'x': list_excel_cols,
-    'y':np.random.randint(0,n_rows*10, n_rows),
-    'z': list_excel_cols_shuffled
+    'y': np.random.randint(0, 100, n_rows),
 })
 
 app.layout = html.Div([
     html.H4('Editable DataTable'),
+    html.H6('%d rows' % n_rows),
     dt.DataTable(
         rows=df_rows.to_dict('records'),
-
-        # optional - sets the order of columns
         columns=sorted(df_rows.columns),
-
         editable=True,
-
         id='editable-table'
     ),
-
     html.Div([
-        html.Pre(id='output', className='two columns'),
-    '''
+        #html.Pre(id='output', className='two columns'),
         html.Div(
             dcc.Graph(
                 id='graph',
@@ -61,19 +49,17 @@ app.layout = html.Div([
                 }
             ),
             className='ten columns'
-        )
-    '''
-    ], className='row')
+        )], className='row')
 ], className='container')
 
-
+'''
 @app.callback(
     Output('output', 'children'),
     [Input('editable-table', 'rows')])
 def update_selected_row_indices(rows):
     return json.dumps(rows, indent=2)
-
 '''
+
 @app.callback(
     Output('graph', 'figure'),
     [Input('editable-table', 'rows')])
@@ -83,18 +69,17 @@ def update_figure(rows):
         'data': [{
             'x': dff['x'],
             'y': dff['y'],
+            'index': dff['index']
         }],
         'layout': {
             'margin': {'l': 10, 'r': 0, 't': 10, 'b': 20}
         }
     }
 
-'''
 
 app.css.append_css({
     'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
 })
 
 if __name__ == '__main__':
-    # Run the Dash app
     app.server.run(debug=True, threaded=True)
