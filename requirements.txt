@@ -12,3 +12,4 @@ sqlalchemy==1.2.12
 psycopg2==2.7.5
 typing
 pytest==3.8.1
+APScheduler==3.0.0
